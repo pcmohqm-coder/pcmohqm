@@ -1,0 +1,11 @@
+{
+  "name": "خدمات فنی محمد",
+  "short_name": "خدمات فنی محمد",
+  "lang": "fa-IR",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7faff",
+  "theme_color": "#06152d",
+  "icons": [{"src":"assets/logo-main.png","sizes":"1536x1536","type":"image/png","purpose":"any maskable"}]
+}
