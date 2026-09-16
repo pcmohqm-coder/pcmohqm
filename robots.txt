@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-
-# After choosing the final domain, add this line:
-# Sitemap: https://YOUR-DOMAIN.example/sitemap.xml
+Sitemap: https://pcmohqm-coder.github.io/pcmohqm/sitemap.xml
