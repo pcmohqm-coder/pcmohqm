@@ -1,9 +1,4 @@
-نسخه آماده انتشار — خدمات فنی محمد
-
-برای GitHub Pages:
-1. محتوای همین پوشه را در ریشه repository قرار بده؛ index.html باید مستقیماً در ریشه باشد.
-2. پوشه assets را هم کامل کنار index.html قرار بده.
-3. Settings > Pages را روی branch و پوشه حاوی index.html تنظیم کن.
-4. آدرس فعلی سایت: https://pcmohqm-coder.github.io/pcmohqm/
-
-فایل‌های SEO: robots.txt و sitemap.xml در ریشه قرار گرفته‌اند.
+نسخه V5 - خدمات فنی محمد
+1) محتوای همین پوشه را در ریشه repository جایگزین کن (index.html و auth.html و assets کنار هم).
+2) صفحه ورود/ثبت‌نام (auth.html) فعلاً فقط ظاهر است و هیچ اطلاعاتی ذخیره نمی‌کند.
+3) بعد از وصل شدن دامنه pcmohqm.ir: canonical, og:url, og:image, sitemap.xml و robots.txt را به آدرس جدید تغییر بده.
