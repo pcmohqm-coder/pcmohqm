@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fa-IR" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06152d">
+<title>پنل مدیریت | خدمات فنی محمد</title>
+<link rel="icon" href="assets/logo-main.png">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+.list{display:grid;gap:10px;margin-top:12px}
+.it{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:#fbfdff}
+.it img,.it .ph{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#eaf2fb;flex:none;display:flex;align-items:center;justify-content:center;font-size:24px}
+.it div.t{flex:1;min-width:0;font-size:13px}.it b{display:block;color:var(--navy)}.it small{color:var(--muted)}
+.it button{border:0;background:#fdecec;color:var(--err);border-radius:10px;padding:8px 12px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.sec{margin-top:18px}
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><a class="brand" href="./"><img src="assets/logo-main.png" alt=""><span>پنل مدیریت</span></a><a class="back" href="./">بازگشت به سایت ←</a></div></div>
+<main class="wrap">
+  <div id="gate" class="card authBox"><h1>پنل مدیریت</h1><p class="sub" id="gateMsg">در حال بررسی...</p><a class="btn" id="gateBtn" href="auth.html" style="text-align:center;display:none">ورود به حساب</a></div>
+
+  <div id="app" class="hide">
+    <div class="grid">
+      <section class="card">
+        <h2>افزودن نمونه کار</h2>
+        <form id="wf" novalidate>
+          <label for="wcat">دسته</label><select id="wcat"></select>
+          <label for="wtitle">عنوان</label><input id="wtitle" maxlength="120">
+          <label for="wdesc">توضیح کوتاه (اختیاری)</label><textarea id="wdesc" maxlength="600"></textarea>
+          <label for="wfile">عکس یا ویدیو (اختیاری)</label><input id="wfile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm">
+          <label for="wurl">لینک نمونه (اختیاری)</label><input id="wurl" class="ltr" dir="ltr" placeholder="https://...">
+          <button class="btn" type="submit">ذخیره نمونه کار</button>
+          <div class="msg" id="wm" role="alert"></div>
+        </form>
+      </section>
+      <section class="card">
+        <h2>افزودن تبلیغ (پوستر / بنر)</h2>
+        <form id="af" novalidate>
+          <label for="atitle">عنوان (نام فروشگاه یا برند)</label><input id="atitle" maxlength="120">
+          <label for="afile">عکس پوستر یا بنر</label><input id="afile" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+          <label for="aurl">لینک (اختیاری)</label><input id="aurl" class="ltr" dir="ltr" placeholder="https://t.me/...">
+          <button class="btn" type="submit">ذخیره تبلیغ</button>
+          <div class="msg" id="am" role="alert"></div>
+        </form>
+      </section>
+    </div>
+    <section class="card sec"><h2>نمونه کارهای ثبت‌شده</h2><div class="list" id="wl"></div></section>
+    <section class="card sec"><h2>تبلیغ‌های ثبت‌شده</h2><div class="list" id="al"></div></section>
+    <p class="note">حد مجاز: عکس تا ۸ مگابایت، ویدیو تا ۶۰ مگابایت (محدودیت خود هاست هم اعمال می‌شود).</p>
+  </div>
+</main>
+<script src="assets/site-data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+async function post(action, fd) {
+  fd.append('action', action);
+  try { const r = await fetch(API + 'admin.php', { method: 'POST', credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' }, body: fd }); return await r.json(); }
+  catch (e) { return { ok: false, error: 'ارتباط با سرور برقرار نشد.' }; }
+}
+async function jpost(action, data) {
+  try { const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' }, body: JSON.stringify({ action, ...data }) }); return await r.json(); }
+  catch (e) { return { ok: false, error: 'ارتباط با سرور برقرار نشد.' }; }
+}
+$('#wcat').innerHTML = PORTFOLIO.map(c => `<option value="${c.id}">${c.icon} ${escapeText(c.title)}</option>`).join('');
+const catTitle = id => (PORTFOLIO.find(c => c.id === id) || {}).title || id;
+async function load() {
+  const d = await api('public_content'); if (!d.ok) return;
+  $('#wl').innerHTML = d.works.length ? d.works.map(w => `<div class="it">${w.media_type === 'image' ? `<img src="${escapeText(w.file)}" alt="">` : `<div class="ph">${w.media_type === 'video' ? '🎬' : '🔗'}</div>`}<div class="t"><b>${escapeText(w.title)}</b><small>${escapeText(catTitle(w.category))}</small></div><button data-w="${w.id}">حذف</button></div>`).join('') : '<p class="sub">هنوز نمونه‌ای ثبت نشده است.</p>';
+  $('#al').innerHTML = d.ads.length ? d.ads.map(a => `<div class="it"><img src="${escapeText(a.file)}" alt=""><div class="t"><b>${escapeText(a.title)}</b></div><button data-a="${a.id}">حذف</button></div>`).join('') : '<p class="sub">هنوز تبلیغی ثبت نشده است.</p>';
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-w],button[data-a]'); if (!b) return;
+  if (!confirm('این مورد حذف شود؟')) return;
+  const r = b.dataset.w ? await jpost('work_delete', { id: +b.dataset.w }) : await jpost('ad_delete', { id: +b.dataset.a });
+  if (!r.ok) alert(r.error); load();
+});
+$('#wf').onsubmit = async e => { e.preventDefault(); const m = $('#wm'); clearMsg(m); e.submitter.disabled = true;
+  const fd = new FormData(); fd.append('category', $('#wcat').value); fd.append('title', $('#wtitle').value); fd.append('description', $('#wdesc').value); fd.append('url', $('#wurl').value);
+  if ($('#wfile').files[0]) fd.append('file', $('#wfile').files[0]);
+  const r = await post('work_add', fd); e.submitter.disabled = false;
+  if (!r.ok) return show(m, r.error, 'err'); show(m, 'نمونه کار ذخیره شد.', 'ok'); $('#wf').reset(); load(); };
+$('#af').onsubmit = async e => { e.preventDefault(); const m = $('#am'); clearMsg(m); e.submitter.disabled = true;
+  const fd = new FormData(); fd.append('title', $('#atitle').value); fd.append('url', $('#aurl').value);
+  if ($('#afile').files[0]) fd.append('file', $('#afile').files[0]);
+  const r = await post('ad_add', fd); e.submitter.disabled = false;
+  if (!r.ok) return show(m, r.error, 'err'); show(m, 'تبلیغ ذخیره شد.', 'ok'); $('#af').reset(); load(); };
+api('admin_me').then(r => {
+  if (r.ok && r.is_admin) { $('#gate').classList.add('hide'); $('#app').classList.remove('hide'); load(); return; }
+  if (r.ok && r.logged_in) { $('#gateMsg').textContent = 'این حساب دسترسی مدیر ندارد. شماره یا ایمیل شما باید در تنظیمات (admins) ثبت شده باشد.'; return; }
+  $('#gateMsg').textContent = 'برای ورود به پنل مدیریت ابتدا وارد حساب خود شوید.'; $('#gateBtn').style.display = 'block';
+});
+</script>
+</body>
+</html>

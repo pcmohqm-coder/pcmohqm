@@ -40,7 +40,7 @@
 <script>
 const $=(s)=>document.querySelector(s);
 const esc=s=>{const d=document.createElement('div');d.textContent=s??'';return d.innerHTML};
-const safeUrl=u=>/^(https?:\/\/|assets\/)/.test(u||'')?u:'';
+const safeUrl=u=>/^(https?:\/\/|assets\/|uploads\/)/.test(u||'')?u:'';
 let cur=(location.hash||'').slice(1); if(!PORTFOLIO.some(c=>c.id===cur)) cur=PORTFOLIO[0].id;
 function renderCats(){
   $('#cats').innerHTML=PORTFOLIO.map(c=>`<button type="button" data-id="${c.id}" class="${c.id===cur?'on':''}">${c.icon} ${esc(c.title)}${c.items.length?` (${c.items.length})`:''}</button>`).join('');
@@ -61,6 +61,12 @@ function renderGrid(){
 $('#lb').onclick=()=>$('#lb').classList.remove('open');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#lb').classList.remove('open')});
 renderCats();renderGrid();
+// اگر پنل مدیریت (PHP) فعال باشد، نمونه کارها از آن خوانده می‌شود؛ وگرنه همان داده ثابت site-data.js
+fetch('api/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'public_content'})})
+ .then(r=>r.json()).then(d=>{ if(!d.ok) return;
+   PORTFOLIO.forEach(c=>{ c.items=d.works.filter(w=>w.category===c.id).map(w=>({title:w.title,desc:w.description,
+     img:w.media_type==='image'?w.file:'',video:w.media_type==='video'?w.file:'',url:w.url||''})) });
+   renderCats();renderGrid(); }).catch(()=>{});
 </script>
 </body>
 </html>
