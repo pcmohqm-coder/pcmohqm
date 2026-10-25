@@ -1,6 +1,6 @@
 راهنمای نهایی SEO — خدمات فنی محمد
 
-آدرس فعلی سایت: https://pcmohqm-coder.github.io/pcmohqm/
+آدرس فعلی سایت: https://pcmohqm.ir/
 
 1) canonical و og:url در index.html روی آدرس فعلی سایت تنظیم شده‌اند.
 2) sitemap.xml واقعی در ریشه سایت قرار گرفته است.

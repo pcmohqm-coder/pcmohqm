@@ -3,62 +3,138 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05060a">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#06152d">
 <title>ورود و ثبت‌نام | خدمات فنی محمد</title>
 <link rel="icon" href="assets/logo-main.png">
-<style>
-:root{--bg:#05060a;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.1);--text:#eef2fa;--muted:#8f9bb3;--gold:#ffc400;--gold2:#ffe27a;--blue:#1e7bff;--cyan:#3ad0ff}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(800px 500px at 85% -5%,rgba(30,123,255,.25),transparent 60%),radial-gradient(600px 500px at 0 100%,rgba(255,196,0,.12),transparent 60%),var(--bg);color:var(--text);font-family:"Vazirmatn","Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9}
-a{color:inherit;text-decoration:none}
-.box{width:min(480px,100%);border-radius:30px;padding:28px 24px;background:rgba(10,13,22,.8);border:1px solid var(--line);backdrop-filter:blur(18px);box-shadow:0 30px 80px rgba(0,0,0,.5)}
-.top{text-align:center;margin-bottom:18px}.top img{width:76px;height:76px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,196,0,.5),0 0 40px rgba(255,196,0,.25)}.top h1{font-size:22px;margin:8px 0 0}.top p{margin:0;color:var(--muted);font-size:14px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:4px;margin-bottom:18px}
-.tabs button{font:inherit;font-weight:800;font-size:15px;border:0;background:none;color:var(--muted);padding:10px;border-radius:12px;cursor:pointer}
-.tabs button.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#141000}
-form{display:none;gap:13px}form.on{display:grid}
-label{display:block;font-size:14px;font-weight:800;margin-bottom:5px}
-input,select,textarea{width:100%;font:inherit;font-size:15px;color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:12px 14px;outline:none}
-select option{background:#0a0d16}
-input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,196,0,.12)}
-textarea{min-height:80px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn{width:100%;min-height:50px;border:0;border-radius:15px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#141000;box-shadow:0 10px 28px rgba(255,196,0,.28)}
-.msg{display:none;padding:12px 14px;border-radius:14px;background:rgba(58,208,255,.1);border:1px solid rgba(58,208,255,.35);color:#cdefff;font-size:14px}.msg.on{display:block}
-.msg a{color:var(--gold2);font-weight:800;text-decoration:underline}
-.back{display:block;text-align:center;margin-top:16px;color:var(--muted);font-size:14px}.back:hover{color:var(--gold)}
-.hint{font-size:12px;color:var(--muted);margin-top:4px}
-</style>
+<link rel="stylesheet" href="assets/app.css">
 </head>
 <body>
-<div class="box">
-  <div class="top"><a href="./"><img src="assets/logo-main.png" alt="لوگوی خدمات فنی محمد"></a><h1>خدمات فنی محمد</h1><p>ورود یا ساخت حساب کاربری</p></div>
-  <div class="tabs" role="tablist"><button class="on" id="tl" role="tab">ورود</button><button id="ts" role="tab">ثبت‌نام</button></div>
+<div class="top"><div class="in"><a class="brand" href="./"><img src="assets/logo-main.png" alt="لوگوی خدمات فنی محمد"><span>خدمات فنی محمد</span></a><a class="back" href="./">بازگشت به سایت ←</a></div></div>
+<main class="wrap"><div class="card authBox">
 
-  <form id="login" class="on" onsubmit="return false">
-    <div><label for="lm">شماره موبایل</label><input id="lm" inputmode="numeric" placeholder="09123456789" dir="ltr" autocomplete="tel"><div class="hint">کد تأیید برای شما پیامک می‌شود.</div></div>
-    <button class="btn" id="lb">دریافت کد تأیید</button>
-    <div class="msg" id="lmsg"></div>
+<!-- مرحله ۱: فرم -->
+<section id="stepForm">
+  <h1>به خدمات فنی محمد خوش آمدید</h1>
+  <p class="sub">برای دسترسی به پنل و خدمات، وارد شوید یا ثبت‌نام کنید.</p>
+  <div class="tabs" role="tablist"><button id="tabLogin" class="on" type="button">ورود</button><button id="tabSignup" type="button">ثبت‌نام</button></div>
+
+  <form id="loginForm" novalidate>
+    <label for="lid">شماره موبایل یا ایمیل</label>
+    <input id="lid" class="ltr" dir="ltr" autocomplete="username" inputmode="email" placeholder="09123456789 یا name@email.com">
+    <p class="note">کد تأیید برای همین شماره یا ایمیل ارسال می‌شود؛ نیازی به رمز عبور نیست.</p>
+    <button class="btn" type="submit">دریافت کد ورود</button>
+    <div class="msg" id="loginMsg" role="alert"></div>
   </form>
 
-  <form id="signup" onsubmit="return false">
-    <div><label for="type">نوع حساب</label><select id="type"><option value="customer">👤 مشتری عادی (خدمات شخصی)</option><option value="seller">🏪 فروشنده / صاحب کسب‌وکار</option></select></div>
-    <div class="two"><div><label for="fn">نام</label><input id="fn" autocomplete="given-name"></div><div><label for="ln">نام خانوادگی</label><input id="ln" autocomplete="family-name"></div></div>
-    <div><label for="sm">شماره موبایل</label><input id="sm" inputmode="numeric" placeholder="09123456789" dir="ltr" autocomplete="tel"></div>
-    <div><label for="em">ایمیل</label><input id="em" type="email" dir="ltr" autocomplete="email"></div>
-    <div><label for="ds">توضیحات</label><textarea id="ds" placeholder="درباره خودت یا کسب‌وکارت بنویس..."></textarea></div>
-    <button class="btn" id="sb">ثبت‌نام و دریافت کد تأیید</button>
-    <div class="msg" id="smsg"></div>
+  <form id="signupForm" class="hide" novalidate>
+    <label>نوع حساب</label>
+    <div class="types">
+      <button type="button" class="type on" data-type="customer"><b>مشتری (فرد عادی)</b><small>برای استفاده شخصی از خدمات</small></button>
+      <button type="button" class="type" data-type="business"><b>فروشگاه / برند</b><small>صاحب مغازه، فروشگاه یا برند</small></button>
+    </div>
+    <div class="row2">
+      <div><label for="fn">نام</label><input id="fn" autocomplete="given-name"></div>
+      <div><label for="ln">نام خانوادگی</label><input id="ln" autocomplete="family-name"></div>
+    </div>
+    <div id="bizBox" class="hide"><label for="bn">نام فروشگاه یا برند</label><input id="bn"></div>
+    <label for="mobile">شماره موبایل</label>
+    <input id="mobile" class="ltr" dir="ltr" inputmode="tel" autocomplete="tel" placeholder="09123456789">
+    <label for="email">ایمیل</label>
+    <input id="email" class="ltr" dir="ltr" type="email" autocomplete="email" placeholder="name@email.com">
+    <label for="desc">توضیحات <span style="font-weight:500;color:var(--muted)">(اختیاری)</span></label>
+    <textarea id="desc" placeholder="مثلاً نوع فعالیت یا خدماتی که نیاز دارید"></textarea>
+    <label>کد تأیید به کدام روش ارسال شود؟</label>
+    <div class="chan"><label><input type="radio" name="chan" value="sms" checked> پیامک به موبایل</label><label><input type="radio" name="chan" value="email"> ایمیل</label></div>
+    <label class="chk"><input type="checkbox" id="terms"><span>قوانین و شرایط استفاده از خدمات را می‌پذیرم.</span></label>
+    <button class="btn" type="submit">ثبت‌نام و دریافت کد</button>
+    <div class="msg" id="signupMsg" role="alert"></div>
   </form>
-  <a class="back" href="./">← بازگشت به سایت</a>
-</div>
+</section>
+
+<!-- مرحله ۲: کد -->
+<section id="stepCode" class="hide">
+  <h1>کد تأیید را وارد کنید</h1>
+  <p class="sub" id="codeSub"></p>
+  <form id="codeForm" novalidate>
+    <input id="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="------">
+    <button class="btn" type="submit">تأیید و ورود</button>
+    <button class="btn sec" type="button" id="resend" disabled>ارسال دوباره کد</button>
+    <button class="btn sec" type="button" id="edit">ویرایش اطلاعات</button>
+    <div class="msg" id="codeMsg" role="alert"></div>
+    <div class="dev" id="devBox">⚠️ حالت آزمایشی: به‌جای پیامک/ایمیل، کد شما <b id="devCode"></b> است.</div>
+  </form>
+</section>
+
+</div></main>
+<script src="assets/app.js"></script>
 <script>
-const $=i=>document.getElementById(i);
-function tab(s){$('login').classList.toggle('on',!s);$('signup').classList.toggle('on',s);$('tl').classList.toggle('on',!s);$('ts').classList.toggle('on',s);history.replaceState(null,'',s?'#signup':'#login')}
-$('tl').onclick=()=>tab(false);$('ts').onclick=()=>tab(true);tab(location.hash==='#signup');
-// پنل هنوز فعال نیست؛ هیچ اطلاعاتی ارسال یا ذخیره نمی‌شود.
-const soon='<b>سیستم ثبت‌نام و ورود هنوز فعال نیست.</b><br>اطلاعاتی ارسال یا ذخیره نشد. فعلاً سفارش را از طریق <a href="https://t.me/bagherian07" target="_blank" rel="noopener">تلگرام</a> یا <a href="https://eitaa.com/bagherian07" target="_blank" rel="noopener">ایتا</a> ثبت کن.';
-['lb','sb'].forEach(b=>$(b).onclick=()=>{const m=$(b==='lb'?'lmsg':'smsg');m.innerHTML=soon;m.classList.add('on')});
+let acctType = 'customer', ctx = null, timer = null;
+const tabLogin = $('#tabLogin'), tabSignup = $('#tabSignup');
+function setTab(t) {
+  const login = t === 'login';
+  tabLogin.classList.toggle('on', login); tabSignup.classList.toggle('on', !login);
+  $('#loginForm').classList.toggle('hide', !login); $('#signupForm').classList.toggle('hide', login);
+}
+tabLogin.onclick = () => setTab('login'); tabSignup.onclick = () => setTab('signup');
+if (location.hash === '#signup') setTab('signup');
+document.querySelectorAll('.type').forEach(b => b.onclick = () => {
+  acctType = b.dataset.type;
+  document.querySelectorAll('.type').forEach(x => x.classList.toggle('on', x === b));
+  $('#bizBox').classList.toggle('hide', acctType !== 'business');
+});
+function goCode(target, purpose, r) {
+  ctx = { target, purpose };
+  $('#stepForm').classList.add('hide'); $('#stepCode').classList.remove('hide');
+  const ch = r.channel === 'email' ? 'ایمیل' : 'پیامک';
+  $('#codeSub').textContent = `کد ۶ رقمی از طریق ${ch} برای ${r.channel === 'email' ? target : toFa(target)} ارسال شد.`;
+  $('#code').value = ''; clearMsg($('#codeMsg')); $('#code').focus();
+  showDev(r); countdown(r.resend || 60);
+}
+function showDev(r) {
+  const b = $('#devBox');
+  if (r.dev_code) { $('#devCode').textContent = r.dev_code; b.style.display = 'block'; } else b.style.display = 'none';
+}
+function countdown(s) {
+  clearInterval(timer); const btn = $('#resend'); btn.disabled = true;
+  const tick = () => { if (s <= 0) { clearInterval(timer); btn.disabled = false; btn.textContent = 'ارسال دوباره کد'; return; }
+    btn.textContent = `ارسال دوباره کد (${toFa(s)} ثانیه)`; s--; };
+  tick(); timer = setInterval(tick, 1000);
+}
+async function guard(btn, fn) { btn.disabled = true; try { await fn(); } finally { btn.disabled = false; } }
+
+$('#loginForm').onsubmit = e => { e.preventDefault(); const m = $('#loginMsg'); clearMsg(m);
+  guard(e.submitter, async () => {
+    const id = $('#lid').value.trim(); if (!id) return show(m, 'شماره موبایل یا ایمیل را وارد کنید.', 'err');
+    const r = await api('login', { identifier: id });
+    if (!r.ok) return show(m, r.error, 'err');
+    goCode(r.target, 'login', r);
+  }); };
+
+$('#signupForm').onsubmit = e => { e.preventDefault(); const m = $('#signupMsg'); clearMsg(m);
+  guard(e.submitter, async () => {
+    const r = await api('signup', {
+      account_type: acctType, first_name: $('#fn').value, last_name: $('#ln').value,
+      business_name: $('#bn').value, mobile: $('#mobile').value, email: $('#email').value,
+      description: $('#desc').value, channel: document.querySelector('input[name=chan]:checked').value,
+      accept_terms: $('#terms').checked });
+    if (!r.ok) return show(m, r.error, 'err');
+    goCode(r.target, 'signup', r);
+  }); };
+
+$('#codeForm').onsubmit = e => { e.preventDefault(); const m = $('#codeMsg'); clearMsg(m);
+  guard(e.submitter, async () => {
+    const code = $('#code').value.trim(); if (code.length < 6) return show(m, 'کد ۶ رقمی را کامل وارد کنید.', 'err');
+    const r = await api('verify', { target: ctx.target, purpose: ctx.purpose, code });
+    if (!r.ok) return show(m, r.error, 'err');
+    location.href = 'panel.html';
+  }); };
+$('#resend').onclick = async () => { const m = $('#codeMsg'); clearMsg(m);
+  const r = await api('resend', { target: ctx.target, purpose: ctx.purpose });
+  if (!r.ok) { if (r.wait) countdown(r.wait); return show(m, r.error, 'err'); }
+  show(m, 'کد جدید ارسال شد.', 'ok'); showDev(r); countdown(r.resend || 60); };
+$('#edit').onclick = () => { clearInterval(timer); $('#stepCode').classList.add('hide'); $('#stepForm').classList.remove('hide'); };
+api('me').then(r => { if (r.ok) location.replace('panel.html'); });
 </script>
 </body>
 </html>

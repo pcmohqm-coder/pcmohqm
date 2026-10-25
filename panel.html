@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fa-IR" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#06152d">
+<title>پنل کاربری | خدمات فنی محمد</title>
+<link rel="icon" href="assets/logo-main.png">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<div class="top"><div class="in"><a class="brand" href="./"><img src="assets/logo-main.png" alt="لوگوی خدمات فنی محمد"><span>پنل کاربری</span></a><button id="logout" type="button">خروج</button></div></div>
+<main class="wrap hide" id="app">
+  <h1 id="hello"></h1>
+  <p class="sub" id="typeLine"></p>
+  <div class="grid">
+    <section class="card" id="profileCard">
+      <h2>پروفایل من</h2>
+      <dl class="kv" id="kv"></dl>
+      <form id="pf" novalidate>
+        <div class="row2"><div><label for="fn">نام</label><input id="fn"></div><div><label for="ln">نام خانوادگی</label><input id="ln"></div></div>
+        <div id="bizBox" class="hide"><label for="bn">نام فروشگاه یا برند</label><input id="bn"></div>
+        <label for="desc">توضیحات</label><textarea id="desc"></textarea>
+        <button class="btn" type="submit">ذخیره تغییرات</button>
+        <div class="msg" id="pfMsg" role="alert"></div>
+      </form>
+    </section>
+    <section class="card">
+      <h2>دسترسی به خدمات</h2>
+      <p class="sub" id="svcSub"></p>
+      <div class="svcs" id="svcs"></div>
+      <p class="note">فهرست خدمات در حال تکمیل است و به‌زودی هر خدمت فرم و پیگیری مخصوص خودش را خواهد داشت.</p>
+    </section>
+  </div>
+</main>
+<script src="assets/app.js"></script>
+<script>
+const TYPE = { business: 'فروشگاه / برند', customer: 'مشتری (فرد عادی)' };
+function render(u, services) {
+  $('#app').classList.remove('hide');
+  $('#hello').textContent = `سلام ${u.first_name} ${u.last_name} 👋`;
+  $('#typeLine').textContent = 'نوع حساب: ' + TYPE[u.account_type];
+  const b = v => `<span class="badge ${v ? 'ok' : 'no'}">${v ? 'تأییدشده' : 'تأییدنشده'}</span>`;
+  $('#kv').innerHTML = `<dt>موبایل</dt><dd class="ltr" dir="ltr" style="text-align:right">${escapeText(u.mobile || '—')} ${b(u.mobile_verified)}</dd>
+    <dt>ایمیل</dt><dd class="ltr" dir="ltr" style="text-align:right">${escapeText(u.email || '—')} ${b(u.email_verified)}</dd>`;
+  $('#fn').value = u.first_name; $('#ln').value = u.last_name; $('#desc').value = u.description || '';
+  const biz = u.account_type === 'business'; $('#bizBox').classList.toggle('hide', !biz); $('#bn').value = u.business_name || '';
+  $('#svcSub').textContent = biz ? 'خدمات ویژه فروشگاه‌ها و برندها' : 'خدمات ویژه افراد عادی';
+  $('#svcs').innerHTML = services.map(s => `<article class="svc"><h3>${escapeText(s.title)}</h3><p>${escapeText(s.desc)}</p><span class="soon">به‌زودی</span></article>`).join('');
+}
+api('me').then(r => { if (!r.ok) return location.replace('auth.html'); render(r.user, r.services); });
+$('#pf').onsubmit = async e => { e.preventDefault(); const m = $('#pfMsg'); clearMsg(m);
+  const r = await api('update_profile', { first_name: $('#fn').value, last_name: $('#ln').value, business_name: $('#bn').value, description: $('#desc').value });
+  if (!r.ok) return show(m, r.error, 'err');
+  show(m, 'تغییرات ذخیره شد.', 'ok'); $('#hello').textContent = `سلام ${r.user.first_name} ${r.user.last_name} 👋`; };
+$('#logout').onclick = async () => { await api('logout'); location.href = './'; };
+</script>
+</body>
+</html>

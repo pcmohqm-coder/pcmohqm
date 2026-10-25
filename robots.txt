@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
-Sitemap: https://pcmohqm-coder.github.io/pcmohqm/sitemap.xml
+Disallow: /api/
+Disallow: /data/
+Disallow: /panel.html
+Disallow: /auth.html
+Sitemap: https://pcmohqm.ir/sitemap.xml
