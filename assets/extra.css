@@ -1,0 +1,18 @@
+/* بخش‌های نمونه کارها و تبلیغات */
+.pfHero{display:block;margin:34px 0;border-radius:28px;padding:30px 24px;color:#fff;background:linear-gradient(135deg,#06152d,#0b2852 60%,#0879ed);box-shadow:0 18px 55px rgba(4,32,68,.22);position:relative;overflow:hidden}
+.pfHero:before{content:"";position:absolute;inset:auto auto -60px -60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(247,201,0,.35),transparent 70%)}
+.pfHero h2{margin:0 0 6px;font-size:26px;color:#fff}.pfHero p{margin:0 0 16px;color:#cfe0f5;font-size:14px;max-width:560px}
+.pfHero .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.pfHero .chips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:5px 12px;font-size:12px}
+.pfHero .go{display:inline-block;background:linear-gradient(135deg,#ffe96a,#f7c900);color:#06152d;font-weight:900;border-radius:14px;padding:12px 20px;font-size:14px}
+@media(min-width:700px){.pfHero{padding:44px 48px}.pfHero h2{font-size:34px}}
+.adsSec{margin:34px 0}
+.adsHead{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.adsHead h2{margin:0;font-size:22px;color:var(--navy)}.adsHead p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.adsGrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.adCard{display:block;border-radius:20px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 10px 30px rgba(4,32,68,.08)}
+.adCard img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#eaf2fb}
+.adCard b{display:block;padding:10px 14px;font-size:13px;color:var(--navy)}
+.adSlot{border:2px dashed #b9d0ea;border-radius:20px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;color:var(--muted);background:#fbfdff;font-size:13px}
+.adSlot b{color:var(--navy);font-size:15px;display:block;margin-bottom:4px}
+.adSlot a{margin-top:10px;font-weight:800;color:var(--blue);font-size:12.5px}
