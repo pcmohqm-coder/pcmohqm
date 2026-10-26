@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 $CFG = require __DIR__ . '/config.php';
+require_once __DIR__ . '/schema.php';
 
 function cfg(string $k, $d = null) { global $CFG; return $CFG[$k] ?? $d; }
 
@@ -41,6 +42,7 @@ function db(): PDO {
     description TEXT, file TEXT, media_type TEXT, url TEXT, created_at INTEGER NOT NULL)");
   $pdo->exec("CREATE TABLE IF NOT EXISTS ads(
     id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, file TEXT NOT NULL, url TEXT, created_at INTEGER NOT NULL)");
+  $pdo->exec("CREATE TABLE IF NOT EXISTS settings(k TEXT PRIMARY KEY, v TEXT NOT NULL)");
   $pdo->exec("CREATE INDEX IF NOT EXISTS otps_target ON otps(target, created_at)");
   return $pdo;
 }
@@ -186,4 +188,33 @@ function save_upload(string $field, bool $allowVideo): array {
 }
 function delete_upload(?string $rel): void {
   if ($rel && preg_match('#^uploads/[a-f0-9]{24}\.(jpg|png|webp|gif|mp4|webm)$#', $rel)) @unlink(__DIR__ . '/../' . $rel);
+}
+
+// ---------- تنظیمات و فهرست‌های قابل ویرایش ----------
+function get_settings(): array {
+  $out = [];
+  foreach (db()->query('SELECT k,v FROM settings')->fetchAll() as $r) {
+    if ($r['k'] === 'list.services' || $r['k'] === 'list.faq') continue;
+    if (isset(SETTING_KEYS[$r['k']])) $out[$r['k']] = $r['v'];
+  }
+  return $out;
+}
+function get_lists(): array {
+  $out = ['services' => null, 'faq' => null];
+  foreach (['services', 'faq'] as $n) {
+    $st = db()->prepare('SELECT v FROM settings WHERE k=?'); $st->execute(['list.' . $n]);
+    $v = $st->fetchColumn();
+    if ($v) { $j = json_decode($v, true); if (is_array($j)) $out[$n] = $j; }
+  }
+  return $out;
+}
+function valid_setting(string $key, string $val): string {
+  [$type, $max] = SETTING_KEYS[$key];
+  $val = $type === 'textarea' ? trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $val)) : clean($val, $max);
+  if (mb_strlen($val) > $max) fail('متن «' . $key . '» بیش از حد طولانی است.');
+  if ($type === 'handle') {
+    $val = ltrim($val, '@ ');
+    if ($val !== '' && !preg_match('/^[A-Za-z0-9_.]{3,40}$/', $val)) fail('آیدی باید فقط حروف انگلیسی، عدد، _ و . باشد (بدون @ و فاصله).');
+  }
+  return $val;
 }

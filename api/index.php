@@ -119,7 +119,7 @@ switch ($action) {
     $db = db();
     $w = $db->query('SELECT id,category,title,description,file,media_type,url FROM works ORDER BY id DESC')->fetchAll();
     $a = $db->query('SELECT id,title,file,url FROM ads ORDER BY id DESC')->fetchAll();
-    json_out(['ok' => true, 'works' => $w, 'ads' => $a]);
+    json_out(['ok' => true, 'works' => $w, 'ads' => $a, 'settings' => get_settings(), 'lists' => get_lists()]);
   }
 
   case 'admin_me': {
@@ -138,6 +138,63 @@ switch ($action) {
     require_admin(); $id = (int)($in['id'] ?? 0);
     $st = db()->prepare('SELECT file FROM ads WHERE id=?'); $st->execute([$id]); $r = $st->fetch();
     if ($r) { delete_upload($r['file']); db()->prepare('DELETE FROM ads WHERE id=?')->execute([$id]); }
+    json_out(['ok' => true]);
+  }
+
+  case 'settings_get': {
+    require_admin();
+    json_out(['ok' => true, 'settings' => get_settings(), 'lists' => get_lists()]);
+  }
+
+  case 'settings_save': {
+    require_admin();
+    $vals = $in['values'] ?? null; if (!is_array($vals)) fail('درخواست نامعتبر');
+    $db = db(); $db->beginTransaction();
+    foreach ($vals as $k => $v) {
+      if (!is_string($k) || !isset(SETTING_KEYS[$k]) || !is_string($v)) { $db->rollBack(); fail('فیلد نامعتبر.'); }
+      $v = valid_setting($k, $v);
+      if ($v === '') $db->prepare('DELETE FROM settings WHERE k=?')->execute([$k]);   // خالی = بازگشت به پیش‌فرض
+      else $db->prepare('INSERT INTO settings(k,v) VALUES(?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v')->execute([$k, $v]);
+    }
+    $db->commit();
+    json_out(['ok' => true, 'settings' => get_settings()]);
+  }
+
+  case 'list_save': {
+    require_admin();
+    $name = (string)($in['name'] ?? ''); if (!in_array($name, ['services', 'faq'], true)) fail('فهرست نامعتبر.');
+    $items = $in['items'] ?? null;
+    if ($items === null) { db()->prepare('DELETE FROM settings WHERE k=?')->execute(['list.' . $name]); json_out(['ok' => true, 'reset' => true]); }
+    if (!is_array($items) || count($items) < 1 || count($items) > 30) fail('تعداد موارد باید بین ۱ تا ۳۰ باشد.');
+    $clean = [];
+    foreach ($items as $it) {
+      if (!is_array($it)) fail('داده نامعتبر.');
+      if ($name === 'services') {
+        $t = clean((string)($it['title'] ?? ''), 80); $d = clean((string)($it['desc'] ?? ''), 300); $l = clean((string)($it['link'] ?? ''), 40);
+        $ic = in_array($it['icon'] ?? '', SERVICE_ICONS, true) ? $it['icon'] : 'star';
+        if ($t === '') fail('عنوان هر خدمت الزامی است.');
+        $clean[] = ['icon' => $ic, 'title' => $t, 'desc' => $d, 'link' => $l !== '' ? $l : 'ثبت سفارش'];
+      } else {
+        $q = clean((string)($it['q'] ?? ''), 200); $a = clean((string)($it['a'] ?? ''), 800);
+        if ($q === '' || $a === '') fail('سؤال و پاسخ هر مورد الزامی است.');
+        $clean[] = ['q' => $q, 'a' => $a];
+      }
+    }
+    db()->prepare('INSERT INTO settings(k,v) VALUES(?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v')->execute(['list.' . $name, json_encode($clean, JSON_UNESCAPED_UNICODE)]);
+    json_out(['ok' => true, 'items' => $clean]);
+  }
+
+  case 'users_list': {
+    require_admin();
+    $rows = db()->query('SELECT id,account_type,first_name,last_name,mobile,email,mobile_verified,email_verified,business_name,description,created_at FROM users ORDER BY id DESC LIMIT 500')->fetchAll();
+    foreach ($rows as &$r) { $r['is_admin'] = is_admin($r); } unset($r);
+    json_out(['ok' => true, 'users' => $rows]);
+  }
+
+  case 'user_delete': {
+    $me = require_admin(); $id = (int)($in['id'] ?? 0);
+    if ($id === (int)$me['id']) fail('حساب خودتان را نمی‌توانید حذف کنید.');
+    db()->prepare('DELETE FROM users WHERE id=?')->execute([$id]);
     json_out(['ok' => true]);
   }
 

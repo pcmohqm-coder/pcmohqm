@@ -1,0 +1,38 @@
+<?php
+// تولیدشده: کلیدهای مجاز متن‌ها و آیکن‌ها
+const SETTING_KEYS=[
+  'hero.t1'=>['text',160],
+  'hero.t2'=>['text',160],
+  'hero.lead'=>['textarea',700],
+  'hero.cta1'=>['text',160],
+  'hero.cta2'=>['text',160],
+  'trust.1t'=>['text',160],
+  'trust.1s'=>['text',160],
+  'trust.2t'=>['text',160],
+  'trust.2s'=>['text',160],
+  'trust.3t'=>['text',160],
+  'trust.3s'=>['text',160],
+  'services.title'=>['text',160],
+  'services.sub'=>['text',160],
+  'pf.title'=>['text',160],
+  'pf.sub'=>['text',160],
+  'ads.title'=>['text',160],
+  'ads.sub'=>['text',160],
+  'faq.title'=>['text',160],
+  'faq.sub'=>['text',160],
+  'eitaa_channel'=>['handle',40],
+  'telegram_channel'=>['handle',40],
+  'instagram'=>['handle',40],
+  'mgr_telegram'=>['handle',40],
+  'mgr_eitaa'=>['handle',40],
+  'about.badge'=>['text',160],
+  'about.h'=>['text',160],
+  'about.p1'=>['textarea',700],
+  'about.p2'=>['textarea',700],
+  'about.p3'=>['textarea',700],
+  'about.quote'=>['text',160],
+  'foot.tagline'=>['text',160],
+  'foot.slogan'=>['text',160],
+  'foot.copy'=>['text',160]
+];
+const SERVICE_ICONS=['monitor','globe','phone','play','brain','pen','chart','shop','camera','star','doc','chat','gear','check','bolt','shield','cloud'];
