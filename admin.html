@@ -4,57 +4,87 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#06152d">
+<meta name="theme-color" content="#050f2b">
 <title>پنل مدیریت | خدمات فنی محمد</title>
 <link rel="icon" href="assets/logo-main.png">
+<link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/app.css">
 <style>
-.list{display:grid;gap:10px;margin-top:12px}
+.tabbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 6px 18px rgba(8,26,69,.05)}
+.tabbar .in{width:min(1100px,calc(100% - 28px));margin:auto;display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.tabbar button{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font:inherit;font-size:13px;font-weight:800;color:var(--navy);cursor:pointer}
+.tabbar button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pane{display:none}.pane.on{display:block}
+.fgrp{margin-bottom:16px}.fgrp h2{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.fld label{margin-top:12px}.fld .hint{font-size:11.5px;color:var(--muted);margin-top:3px}
+.rowb{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.rowb .btn{margin:0;width:auto;padding:11px 20px;font-size:14px}
+.btn.ghost{background:#eaf2fb;color:var(--navy)}
+.btn.danger{background:#fdecec;color:var(--err)}
+.li{border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;background:#fbfdff}
+.li .top{display:flex;gap:8px;align-items:center;margin-bottom:6px;font-weight:800;color:var(--navy);font-size:13px}
+.li .top .sp{flex:1}.li .top button{border:0;background:#eaf2fb;border-radius:9px;width:32px;height:32px;cursor:pointer;font-size:14px;color:var(--navy)}
+.li .top button.x{background:#fdecec;color:var(--err)}
+.ut{width:100%;border-collapse:collapse;font-size:13px}.ut th,.ut td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.ut th{color:var(--muted);font-weight:700;font-size:12px}.ut .ltr{direction:ltr;text-align:right}
+.tagc{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:800;background:#eaf2fb;color:var(--navy)}.tagc.b{background:#fff1cf;color:#8a5a00}.tagc.a{background:#e8f7ee;color:var(--ok)}
+.tw{overflow-x:auto}
 .it{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:#fbfdff}
 .it img,.it .ph{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#eaf2fb;flex:none;display:flex;align-items:center;justify-content:center;font-size:24px}
 .it div.t{flex:1;min-width:0;font-size:13px}.it b{display:block;color:var(--navy)}.it small{color:var(--muted)}
 .it button{border:0;background:#fdecec;color:var(--err);border-radius:10px;padding:8px 12px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
-.sec{margin-top:18px}
+.list{display:grid;gap:10px;margin-top:12px}.sec{margin-top:18px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 22px;border-radius:14px;font-size:13.5px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:50}.toast.on{opacity:1}.toast.err{background:var(--err)}
 </style>
 </head>
 <body>
-<div class="top"><div class="in"><a class="brand" href="./"><img src="assets/logo-main.png" alt=""><span>پنل مدیریت</span></a><a class="back" href="./">بازگشت به سایت ←</a></div></div>
-<main class="wrap">
-  <div id="gate" class="card authBox"><h1>پنل مدیریت</h1><p class="sub" id="gateMsg">در حال بررسی...</p><a class="btn" id="gateBtn" href="auth.html" style="text-align:center;display:none">ورود به حساب</a></div>
+<div class="top"><div class="in"><a class="brand" href="./"><img src="assets/logo-main.png" alt=""><span>پنل مدیریت</span></a><a class="back" href="./">مشاهده سایت ←</a></div></div>
+<div id="gate" class="wrap"><div class="card authBox"><h1>پنل مدیریت</h1><p class="sub" id="gateMsg">در حال بررسی...</p><a class="btn" id="gateBtn" href="auth.html" style="text-align:center;display:none">ورود به حساب</a></div></div>
 
-  <div id="app" class="hide">
-    <div class="grid">
-      <section class="card">
-        <h2>افزودن نمونه کار</h2>
-        <form id="wf" novalidate>
-          <label for="wcat">دسته</label><select id="wcat"></select>
-          <label for="wtitle">عنوان</label><input id="wtitle" maxlength="120">
-          <label for="wdesc">توضیح کوتاه (اختیاری)</label><textarea id="wdesc" maxlength="600"></textarea>
-          <label for="wfile">عکس یا ویدیو (اختیاری)</label><input id="wfile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm">
-          <label for="wurl">لینک نمونه (اختیاری)</label><input id="wurl" class="ltr" dir="ltr" placeholder="https://...">
-          <button class="btn" type="submit">ذخیره نمونه کار</button>
-          <div class="msg" id="wm" role="alert"></div>
-        </form>
-      </section>
-      <section class="card">
-        <h2>افزودن تبلیغ (پوستر / بنر)</h2>
-        <form id="af" novalidate>
-          <label for="atitle">عنوان (نام فروشگاه یا برند)</label><input id="atitle" maxlength="120">
-          <label for="afile">عکس پوستر یا بنر</label><input id="afile" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
-          <label for="aurl">لینک (اختیاری)</label><input id="aurl" class="ltr" dir="ltr" placeholder="https://t.me/...">
-          <button class="btn" type="submit">ذخیره تبلیغ</button>
-          <div class="msg" id="am" role="alert"></div>
-        </form>
-      </section>
-    </div>
-    <section class="card sec"><h2>نمونه کارهای ثبت‌شده</h2><div class="list" id="wl"></div></section>
-    <section class="card sec"><h2>تبلیغ‌های ثبت‌شده</h2><div class="list" id="al"></div></section>
-    <p class="note">حد مجاز: عکس تا ۸ مگابایت، ویدیو تا ۶۰ مگابایت (محدودیت خود هاست هم اعمال می‌شود).</p>
-  </div>
-</main>
+<div id="app" class="hide">
+<div class="tabbar"><div class="in" id="tabs">
+<button data-t="content" class="on">متن‌های سایت</button><button data-t="services">خدمات</button><button data-t="faq">سؤالات متداول</button><button data-t="media">نمونه کار و تبلیغ</button><button data-t="users">کاربران</button>
+</div></div>
+<main class="wrap">
+
+<section class="pane on" id="p-content"><p class="sub">هر متن یا لینک سایت را اینجا تغییر بده و ذخیره کن؛ بلافاصله در سایت اعمال می‌شود. اگر فیلدی را خالی ذخیره کنی، به متن پیش‌فرض برمی‌گردد.</p><div id="groups"></div></section>
+
+<section class="pane" id="p-services"><div class="card"><h2>خدمات سایت</h2><p class="sub">کارت‌های بخش «خدمات ما» و گزینه‌های فرم سفارش. ترتیب را با فلش‌ها عوض کن.</p><div id="svcList"></div>
+<div class="rowb"><button class="btn ghost" id="svcAdd" type="button">+ افزودن خدمت</button><button class="btn" id="svcSave" type="button">ذخیره خدمات</button><button class="btn danger" id="svcReset" type="button">بازگشت به پیش‌فرض</button></div></div></section>
+
+<section class="pane" id="p-faq"><div class="card"><h2>سؤالات متداول</h2><p class="sub">سؤال و پاسخ‌های نمایش‌داده‌شده در صفحه اصلی.</p><div id="faqList"></div>
+<div class="rowb"><button class="btn ghost" id="faqAdd" type="button">+ افزودن سؤال</button><button class="btn" id="faqSave" type="button">ذخیره سؤالات</button><button class="btn danger" id="faqReset" type="button">بازگشت به پیش‌فرض</button></div></div></section>
+
+<section class="pane" id="p-media">
+<div class="grid">
+<section class="card"><h2>افزودن نمونه کار</h2>
+<form id="wf" novalidate>
+<label for="wcat">دسته</label><select id="wcat"></select>
+<label for="wtitle">عنوان</label><input id="wtitle" maxlength="120">
+<label for="wdesc">توضیح کوتاه (اختیاری)</label><textarea id="wdesc" maxlength="600"></textarea>
+<label for="wfile">عکس یا ویدیو (اختیاری)</label><input id="wfile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm">
+<label for="wurl">لینک نمونه (اختیاری)</label><input id="wurl" class="ltr" dir="ltr" placeholder="https://...">
+<button class="btn" type="submit">ذخیره نمونه کار</button><div class="msg" id="wm" role="alert"></div></form></section>
+<section class="card"><h2>افزودن تبلیغ (پوستر / بنر)</h2>
+<form id="af" novalidate>
+<label for="atitle">عنوان (نام فروشگاه یا برند)</label><input id="atitle" maxlength="120">
+<label for="afile">عکس پوستر یا بنر</label><input id="afile" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+<label for="aurl">لینک (اختیاری)</label><input id="aurl" class="ltr" dir="ltr" placeholder="https://t.me/...">
+<button class="btn" type="submit">ذخیره تبلیغ</button><div class="msg" id="am" role="alert"></div></form></section>
+</div>
+<section class="card sec"><h2>نمونه کارهای ثبت‌شده</h2><div class="list" id="wl"></div></section>
+<section class="card sec"><h2>تبلیغ‌های ثبت‌شده</h2><div class="list" id="al"></div></section>
+<p class="note">حد مجاز: عکس تا ۸ مگابایت، ویدیو تا ۶۰ مگابایت (محدودیت خود هاست هم اعمال می‌شود).</p></section>
+
+<section class="pane" id="p-users"><div class="card"><h2>کاربران ثبت‌نام‌شده</h2><p class="sub" id="uCount"></p><div class="tw"><table class="ut"><thead><tr><th>نام</th><th>نوع</th><th>موبایل</th><th>ایمیل</th><th>توضیحات</th><th></th></tr></thead><tbody id="uBody"></tbody></table></div></div></section>
+</main></div>
+<div class="toast" id="toast"></div>
 <script src="assets/site-data.js"></script>
+<script src="assets/editable.js"></script>
 <script src="assets/app.js"></script>
 <script>
+const E = EDITABLE;
+function toast(t, err) { const x = $('#toast'); x.textContent = t; x.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toast.t); toast.t = setTimeout(() => x.className = 'toast', 2600); }
 async function post(action, fd) {
   fd.append('action', action);
   try { const r = await fetch(API + 'admin.php', { method: 'POST', credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' }, body: fd }); return await r.json(); }
@@ -64,31 +94,108 @@ async function jpost(action, data) {
   try { const r = await fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' }, body: JSON.stringify({ action, ...data }) }); return await r.json(); }
   catch (e) { return { ok: false, error: 'ارتباط با سرور برقرار نشد.' }; }
 }
-$('#wcat').innerHTML = PORTFOLIO.map(c => `<option value="${c.id}">${c.icon} ${escapeText(c.title)}</option>`).join('');
+const X = escapeText;
+let S = {}, LISTS = {}, svc = [], faq = [];
+
+/* ---------- تب‌ها ---------- */
+$('#tabs').onclick = e => { const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + b.dataset.t));
+  if (b.dataset.t === 'users') loadUsers(); if (b.dataset.t === 'media') loadMedia(); window.scrollTo({ top: 0 }); };
+
+/* ---------- متن‌ها ---------- */
+function renderGroups() {
+  $('#groups').innerHTML = E.groups.map(g => `<section class="card fgrp" data-g="${g.id}"><h2>${X(g.label)}</h2>
+   ${g.fields.map(f => { const v = S[f.key] ?? f.def; const dir = f.type === 'handle' ? ' class="ltr" dir="ltr"' : '';
+     return `<div class="fld"><label for="f_${f.key}">${X(f.label)}</label>` + (f.type === 'textarea'
+      ? `<textarea id="f_${f.key}" data-key="${f.key}" rows="4">${X(v)}</textarea>`
+      : `<input id="f_${f.key}" data-key="${f.key}"${dir} value="${X(v)}">`) + '</div>'; }).join('')}
+   <div class="rowb"><button class="btn" type="button" data-save="${g.id}">ذخیره این بخش</button><button class="btn danger" type="button" data-reset="${g.id}">بازگشت به پیش‌فرض</button></div></section>`).join('');
+}
+$('#groups').onclick = async e => {
+  const sv = e.target.closest('[data-save]'), rs = e.target.closest('[data-reset]'); if (!sv && !rs) return;
+  const g = E.groups.find(x => x.id === (sv || rs).dataset[sv ? 'save' : 'reset']); const values = {};
+  g.fields.forEach(f => { const el = document.getElementById('f_' + f.key); values[f.key] = rs ? '' : (el.value.trim() === f.def ? '' : el.value.trim()); });
+  const r = await jpost('settings_save', { values });
+  if (!r.ok) return toast(r.error, true);
+  S = r.settings; g.fields.forEach(f => { document.getElementById('f_' + f.key).value = S[f.key] ?? f.def; });
+  toast(rs ? 'به پیش‌فرض برگشت.' : 'ذخیره شد و در سایت اعمال شد.');
+};
+
+/* ---------- ویرایشگر فهرست (خدمات / سؤالات) ---------- */
+const iconOpts = cur => Object.keys(E.icons).filter(k => !['doc','chat','gear','check','bolt','shield','cloud'].includes(k)).map(k => `<option value="${k}"${k === cur ? ' selected' : ''}>${({monitor:'کامپیوتر',globe:'اینترنت',phone:'موبایل',play:'ویدیو',brain:'هوش مصنوعی',pen:'قلم / طراحی',chart:'نمودار',shop:'فروشگاه',camera:'دوربین',star:'ستاره'})[k] || k}</option>`).join('');
+function renderSvc() {
+  $('#svcList').innerHTML = svc.map((s, i) => `<div class="li" data-i="${i}"><div class="top">خدمت ${toFa(i + 1)}<span class="sp"></span><button data-act="up" type="button">↑</button><button data-act="down" type="button">↓</button><button class="x" data-act="del" type="button">✕</button></div>
+   <label>عنوان</label><input data-f="title" value="${X(s.title)}" maxlength="80"><label>توضیح</label><textarea data-f="desc" rows="2" maxlength="300">${X(s.desc)}</textarea>
+   <div class="row2"><div><label>متن لینک کارت</label><input data-f="link" value="${X(s.link)}" maxlength="40"></div><div><label>آیکن</label><select data-f="icon">${iconOpts(s.icon)}</select></div></div></div>`).join('');
+}
+function renderFaq() {
+  $('#faqList').innerHTML = faq.map((s, i) => `<div class="li" data-i="${i}"><div class="top">سؤال ${toFa(i + 1)}<span class="sp"></span><button data-act="up" type="button">↑</button><button data-act="down" type="button">↓</button><button class="x" data-act="del" type="button">✕</button></div>
+   <label>سؤال</label><input data-f="q" value="${X(s.q)}" maxlength="200"><label>پاسخ</label><textarea data-f="a" rows="3" maxlength="800">${X(s.a)}</textarea></div>`).join('');
+}
+function bindList(rootSel, arr, rerender) {
+  const root = $(rootSel);
+  root.addEventListener('input', e => { const li = e.target.closest('.li'); if (!li || !e.target.dataset.f) return; arr()[+li.dataset.i][e.target.dataset.f] = e.target.value; });
+  root.addEventListener('change', e => { const li = e.target.closest('.li'); if (li && e.target.dataset.f) arr()[+li.dataset.i][e.target.dataset.f] = e.target.value; });
+  root.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; const i = +b.closest('.li').dataset.i, a = arr();
+    if (b.dataset.act === 'del') { if (a.length < 2) return toast('حداقل یک مورد باید بماند.', true); a.splice(i, 1); }
+    if (b.dataset.act === 'up' && i > 0) [a[i - 1], a[i]] = [a[i], a[i - 1]];
+    if (b.dataset.act === 'down' && i < a.length - 1) [a[i + 1], a[i]] = [a[i], a[i + 1]];
+    rerender(); });
+}
+bindList('#svcList', () => svc, renderSvc); bindList('#faqList', () => faq, renderFaq);
+$('#svcAdd').onclick = () => { svc.push({ icon: 'star', title: '', desc: '', link: 'ثبت سفارش' }); renderSvc(); };
+$('#faqAdd').onclick = () => { faq.push({ q: '', a: '' }); renderFaq(); };
+async function saveList(name, items) { const r = await jpost('list_save', { name, items }); if (!r.ok) return toast(r.error, true); toast(items === null ? 'به پیش‌فرض برگشت.' : 'ذخیره شد و در سایت اعمال شد.'); return r; }
+$('#svcSave').onclick = () => saveList('services', svc); $('#faqSave').onclick = () => saveList('faq', faq);
+$('#svcReset').onclick = async () => { if (!confirm('خدمات به حالت پیش‌فرض برگردد؟')) return; if (await saveList('services', null)) { svc = JSON.parse(JSON.stringify(E.services)); renderSvc(); } };
+$('#faqReset').onclick = async () => { if (!confirm('سؤالات به حالت پیش‌فرض برگردد؟')) return; if (await saveList('faq', null)) { faq = JSON.parse(JSON.stringify(E.faq)); renderFaq(); } };
+
+/* ---------- نمونه کار و تبلیغ ---------- */
+$('#wcat').innerHTML = PORTFOLIO.map(c => `<option value="${c.id}">${c.icon} ${X(c.title)}</option>`).join('');
 const catTitle = id => (PORTFOLIO.find(c => c.id === id) || {}).title || id;
-async function load() {
+async function loadMedia() {
   const d = await api('public_content'); if (!d.ok) return;
-  $('#wl').innerHTML = d.works.length ? d.works.map(w => `<div class="it">${w.media_type === 'image' ? `<img src="${escapeText(w.file)}" alt="">` : `<div class="ph">${w.media_type === 'video' ? '🎬' : '🔗'}</div>`}<div class="t"><b>${escapeText(w.title)}</b><small>${escapeText(catTitle(w.category))}</small></div><button data-w="${w.id}">حذف</button></div>`).join('') : '<p class="sub">هنوز نمونه‌ای ثبت نشده است.</p>';
-  $('#al').innerHTML = d.ads.length ? d.ads.map(a => `<div class="it"><img src="${escapeText(a.file)}" alt=""><div class="t"><b>${escapeText(a.title)}</b></div><button data-a="${a.id}">حذف</button></div>`).join('') : '<p class="sub">هنوز تبلیغی ثبت نشده است.</p>';
+  $('#wl').innerHTML = d.works.length ? d.works.map(w => `<div class="it">${w.media_type === 'image' ? `<img src="${X(w.file)}" alt="">` : `<div class="ph">${w.media_type === 'video' ? '🎬' : '🔗'}</div>`}<div class="t"><b>${X(w.title)}</b><small>${X(catTitle(w.category))}</small></div><button data-w="${w.id}">حذف</button></div>`).join('') : '<p class="sub">هنوز نمونه‌ای ثبت نشده است.</p>';
+  $('#al').innerHTML = d.ads.length ? d.ads.map(a => `<div class="it"><img src="${X(a.file)}" alt=""><div class="t"><b>${X(a.title)}</b></div><button data-a="${a.id}">حذف</button></div>`).join('') : '<p class="sub">هنوز تبلیغی ثبت نشده است.</p>';
 }
 document.addEventListener('click', async e => {
-  const b = e.target.closest('button[data-w],button[data-a]'); if (!b) return;
+  const b = e.target.closest('button[data-w],button[data-a],button[data-u]'); if (!b) return;
   if (!confirm('این مورد حذف شود؟')) return;
-  const r = b.dataset.w ? await jpost('work_delete', { id: +b.dataset.w }) : await jpost('ad_delete', { id: +b.dataset.a });
-  if (!r.ok) alert(r.error); load();
+  const r = b.dataset.w ? await jpost('work_delete', { id: +b.dataset.w }) : b.dataset.a ? await jpost('ad_delete', { id: +b.dataset.a }) : await jpost('user_delete', { id: +b.dataset.u });
+  if (!r.ok) return toast(r.error, true); b.dataset.u ? loadUsers() : loadMedia();
 });
 $('#wf').onsubmit = async e => { e.preventDefault(); const m = $('#wm'); clearMsg(m); e.submitter.disabled = true;
   const fd = new FormData(); fd.append('category', $('#wcat').value); fd.append('title', $('#wtitle').value); fd.append('description', $('#wdesc').value); fd.append('url', $('#wurl').value);
   if ($('#wfile').files[0]) fd.append('file', $('#wfile').files[0]);
   const r = await post('work_add', fd); e.submitter.disabled = false;
-  if (!r.ok) return show(m, r.error, 'err'); show(m, 'نمونه کار ذخیره شد.', 'ok'); $('#wf').reset(); load(); };
+  if (!r.ok) return show(m, r.error, 'err'); show(m, 'نمونه کار ذخیره شد.', 'ok'); $('#wf').reset(); loadMedia(); };
 $('#af').onsubmit = async e => { e.preventDefault(); const m = $('#am'); clearMsg(m); e.submitter.disabled = true;
   const fd = new FormData(); fd.append('title', $('#atitle').value); fd.append('url', $('#aurl').value);
   if ($('#afile').files[0]) fd.append('file', $('#afile').files[0]);
   const r = await post('ad_add', fd); e.submitter.disabled = false;
-  if (!r.ok) return show(m, r.error, 'err'); show(m, 'تبلیغ ذخیره شد.', 'ok'); $('#af').reset(); load(); };
+  if (!r.ok) return show(m, r.error, 'err'); show(m, 'تبلیغ ذخیره شد.', 'ok'); $('#af').reset(); loadMedia(); };
+
+/* ---------- کاربران ---------- */
+async function loadUsers() {
+  const r = await jpost('users_list', {}); if (!r.ok) return toast(r.error, true);
+  $('#uCount').textContent = `${toFa(r.users.length)} کاربر`;
+  const dt = t => new Date(t * 1000).toLocaleDateString('fa-IR');
+  $('#uBody').innerHTML = r.users.map(u => `<tr><td><b>${X(u.first_name + ' ' + u.last_name)}</b>${u.business_name ? `<br><small>${X(u.business_name)}</small>` : ''}<br><small>${dt(u.created_at)}</small></td>
+   <td><span class="tagc ${u.account_type === 'business' ? 'b' : ''}">${u.account_type === 'business' ? 'فروشگاه' : 'مشتری'}</span>${u.is_admin ? ' <span class="tagc a">مدیر</span>' : ''}</td>
+   <td class="ltr">${X(u.mobile || '')}${u.mobile_verified ? ' ✓' : ''}</td><td class="ltr">${X(u.email || '')}${u.email_verified ? ' ✓' : ''}</td><td>${X(u.description || '')}</td>
+   <td>${u.is_admin ? '' : `<button class="btn danger" style="padding:6px 12px;font-size:12px;margin:0" data-u="${u.id}">حذف</button>`}</td></tr>`).join('') || '<tr><td colspan="6">کاربری ثبت نشده است.</td></tr>';
+}
+
+/* ---------- شروع ---------- */
+async function boot() {
+  const g = await jpost('settings_get', {});
+  S = g.settings || {}; LISTS = g.lists || {};
+  svc = JSON.parse(JSON.stringify(LISTS.services || E.services)); faq = JSON.parse(JSON.stringify(LISTS.faq || E.faq));
+  renderGroups(); renderSvc(); renderFaq();
+}
 api('admin_me').then(r => {
-  if (r.ok && r.is_admin) { $('#gate').classList.add('hide'); $('#app').classList.remove('hide'); load(); return; }
+  if (r.ok && r.is_admin) { $('#gate').classList.add('hide'); $('#app').classList.remove('hide'); boot(); return; }
   if (r.ok && r.logged_in) { $('#gateMsg').textContent = 'این حساب دسترسی مدیر ندارد. شماره یا ایمیل شما باید در تنظیمات (admins) ثبت شده باشد.'; return; }
   $('#gateMsg').textContent = 'برای ورود به پنل مدیریت ابتدا وارد حساب خود شوید.'; $('#gateBtn').style.display = 'block';
 });
